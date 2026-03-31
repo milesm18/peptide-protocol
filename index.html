@@ -35,31 +35,107 @@ button{font-family:inherit;cursor:pointer}input,textarea{font-family:inherit}
 <div class="hdr"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div><div style="font-size:8px;letter-spacing:4px;color:#333;font-weight:700">14-WEEK RECOMP</div><h1 style="font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-top:2px">PEPTIDE PROTOCOL</h1><div style="font-size:9px;color:#444;margin-top:3px">83kg · 181cm · 12-15% → 9-11% BF</div></div><div style="text-align:right"><div id="phN" style="font-size:11px;font-weight:700"></div><div id="phT" style="font-size:9px;color:#555;margin-top:1px"></div><div id="phW" style="font-size:9px;color:#333;margin-top:1px"></div></div></div><div class="tabs" id="tabs"></div></div>
 <div class="cnt" id="cnt"></div>
 <script>
-const P={phases:[{name:"BASE",weeks:[1,2],color:"#4A9EAF",tag:"Foundation"},{name:"INTRODUCTION",weeks:[3,4],color:"#D4A853",tag:"Reta + MT-2 Loading"},{name:"ESCALATION",weeks:[5,6],color:"#C67A3C",tag:"Dose Ramp"},{name:"ESCALATION II",weeks:[7,8],color:"#B85C38",tag:"IGF-1 Decision"},{name:"CRUISE",weeks:[9,10,11,12,13,14],color:"#8B3A3A",tag:"Payoff Window"}],
+const P={phases:[
+  {name:"LAUNCH",weeks:[1,2],color:"#4A9EAF",tag:"All Systems Go"},
+  {name:"ESCALATION I",weeks:[3,4],color:"#D4A853",tag:"Reta → 1mg"},
+  {name:"ESCALATION II",weeks:[5,6],color:"#C67A3C",tag:"Reta → 1.5mg"},
+  {name:"DECISION",weeks:[7,8],color:"#B85C38",tag:"IGF-1 Decision"},
+  {name:"CRUISE",weeks:[9,10,11,12,13,14],color:"#8B3A3A",tag:"Payoff Window"}
+],
 compounds:[
   {key:"klow",name:"KLOW BLEND 80mg",sub:"BPC-157·TB-500·KPV·GHK-Cu",color:"#4A9EAF",bac:"2ml",conc:"40mg/ml",draw:"10 units",dd:"=500mcg BPC/TB/KPV+2.5mg GHK-Cu",store:"Fridge 28d",sd:28,vials:"5 (~20d each)",timing:"AM before food",cycle:"Wk1–14 daily"},
   {key:"cjc",name:"CJC-1295+IPA 10mg",sub:"GH Secretagogue",color:"#7B8CDE",bac:"3ml",conc:"3.33mg/ml",draw:"6 units",dd:"=~200mcg total",store:"Fridge 25d",sd:25,vials:"2 (~50d each)",timing:"Before bed",cycle:"Wk1–14 daily"},
-  {key:"reta",name:"GLP-3 RT 10mg",sub:"Triple Agonist",color:"#D4A853",bac:"2ml",conc:"5mg/ml",draw:"10→20→30u",dd:"Wk3-4:10u·Wk5-6:20u·Wk7+:30u",store:"Fridge 30d",sd:30,vials:"2 total",timing:"Sunday PM",cycle:"Wk3–14"},
-  {key:"mt2",name:"MELANOTAN II 10mg",sub:"Tanning",color:"#C084FC",bac:"2ml",conc:"5mg/ml",draw:"5 or 10u",dd:"Load:5u daily·Maint:10u 1-2×/wk",store:"Fridge 28d",sd:28,vials:"1 total",timing:"Before bed",cycle:"Wk3-4 load, wk4-10 2×/wk, wk11+ 1×/wk"},
-  {key:"igf",name:"IGF-1 LR3",sub:"Wk8 Decision",color:"#8B3A3A",bac:"TBD",conc:"TBD",draw:"TBD",dd:"20-40mcg/day if added",store:"TBD",sd:0,vials:"—",timing:"Post-workout",cycle:"Wk9-12 if added"}
+  {key:"reta",name:"GLP-3 RT 10mg",sub:"Triple Agonist",color:"#D4A853",bac:"2ml",conc:"5mg/ml",draw:"10→20→30u",dd:"Wk1-2:10u·Wk3-4:20u·Wk5+:30u",store:"Fridge 30d",sd:30,vials:"2 total",timing:"Sunday PM",cycle:"Wk1–14 (titrate wk1–6, cruise wk7+)"},
+  {key:"mt2",name:"MELANOTAN II 10mg",sub:"Tanning",color:"#C084FC",bac:"2ml",conc:"5mg/ml",draw:"5 or 10u",dd:"Load:5u daily·Maint:10u 1-2×/wk",store:"Fridge 28d",sd:28,vials:"1 total",timing:"Before bed",cycle:"Wk1-2 load, wk2-8 2×/wk, wk9+ 1×/wk"},
+  {key:"igf",name:"IGF-1 LR3",sub:"Wk8 Decision",color:"#8B3A3A",bac:"TBD",conc:"TBD",draw:"TBD",dd:"20-40mcg/day if added",store:"TBD",sd:0,vials:"—",timing:"Post-workout",cycle:"Wk9-12 if added (4wk blast)"}
 ],
 weeks:[
-{week:1,phase:"BASE",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"500mcg BPC/TB/KPV+2.5mg GHK-Cu",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"~200mcg empty stomach",f:"daily"}],tr:"Full intensity — baseline",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"Build pinning habit.",bl:"BASELINE BLOODS: IGF-1, metabolic, glucose/insulin, HbA1c, lipids, CRP, testosterone"},
-{week:2,phase:"BASE",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"}],tr:"Progressive overload",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"Assess sleep + recovery.",ord:"📦 Klow #2 + BAC water"},
-{week:3,phase:"INTRODUCTION",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"0.5mg (10u)",w:"🟡 Sun",dt:"Light meal. Nausea likely.",f:"1×/wk"},{c:"mt2",d:"250mcg (5u)",w:"🌙 PM",dt:"LOAD daily×10. UV 15-20min.",f:"daily×10"}],tr:"Maintain intensity",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"MT-2 loading + reta intro. Nausea may stack."},
-{week:4,phase:"INTRODUCTION",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"0.5mg (10u)",w:"🟡 Sun",dt:"Tolerability check.",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"MAINT 2×/wk Mon+Thu",f:"2×/wk"}],tr:"Overload. Tan building.",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"MT-2 → maintenance. Brief UV."},
-{week:5,phase:"ESCALATION",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1mg (20u)",w:"🟡 Sun",dt:"First escalation.",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}],tr:"Push intensity",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"Reta metabolic effect kicks in.",ord:"📦 Klow #3"},
-{week:6,phase:"ESCALATION",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1mg (20u)",w:"🟡 Sun",dt:"Hold dose.",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}],tr:"Track all lifts",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"Leaner midsection. Skin improving.",bl:"MID-CYCLE: IGF-1, liver, glucose, CRP",ord:"📦 CJC/Ipa #2 + BAC"},
-{week:7,phase:"ESCALATION II",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1.5mg (30u)",w:"🟡 Sun",dt:"→ cruise dose.",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}],tr:"Recomp accelerating",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"Mirror changes fast.",ord:"📦 Reta #2 + BAC"},
-{week:8,phase:"ESCALATION II",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1.5mg (30u)",w:"🟡 Sun",dt:"Cruise — hold.",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}],tr:"Assess strength",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"⚡ IGF-1 LR3 DECISION",bl:"Review wk6 bloods.",ord:"📦 Klow #4"},
-{week:9,phase:"CRUISE",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1.5mg (30u)",w:"🟡 Sun",dt:"Cruise",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}],tr:"V-taper focus",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"Payoff window."},
-{week:10,phase:"CRUISE",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1.5mg (30u)",w:"🟡 Sun",dt:"Cruise",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}],tr:"Shoulders, lats, chest",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"Veins + definition."},
-{week:11,phase:"CRUISE",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1.5mg (30u)",w:"🟡 Sun",dt:"Cruise",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"1-2×/wk",f:"1-2×/wk"}],tr:"Maintain strength",mac:{cal:"2,600–2,700",p:200,f:70,c:"280–300"},n:"Calorie cut if plateaued.",ord:"📦 Klow #5 + BAC (final)"},
-{week:12,phase:"CRUISE",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1.5mg (30u)",w:"🟡 Sun",dt:"Cruise",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"1×/wk",f:"1×/wk"}],tr:"Maintain intensity",mac:{cal:"2,600–2,700",p:200,f:70,c:"280–300"},n:"Leaner + tanned."},
-{week:13,phase:"CRUISE",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},{c:"reta",d:"1.5mg (30u)",w:"🟡 Sun",dt:"Cruise",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"1×/wk",f:"1×/wk"}],tr:"Final push",mac:{cal:"2,600–2,700",p:200,f:70,c:"280–300"},n:"Plan post-protocol."},
-{week:14,phase:"CRUISE",pins:[{c:"klow",d:"10u",w:"☀️ AM",dt:"Final",f:"daily"},{c:"cjc",d:"6u",w:"🌙 PM",dt:"Final",f:"daily"},{c:"reta",d:"1.5mg (30u)",w:"🟡 Sun",dt:"Final",f:"1×/wk"},{c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"Final",f:"1×/wk"}],tr:"Deload if needed",mac:{cal:"2,600–2,700",p:200,f:70,c:"280–300"},n:"TARGET: 81-83kg, 9-11% BF.",bl:"END BLOODS: Full panel."}
+{week:1,phase:"LAUNCH",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"500mcg BPC/TB/KPV+2.5mg GHK-Cu",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"~200mcg — empty stomach",f:"daily"},
+  {c:"reta",d:"0.5mg (10u)",w:"🟡 Sunday",dt:"Start day 5. Light meal before. Nausea likely 24-48hrs.",f:"1×/wk"},
+  {c:"mt2",d:"250mcg (5u)",w:"🌙 PM",dt:"LOAD: start day 3 (Fri). Daily×10. Separate syringe. 15-20min UV.",f:"daily×10"}
+],tr:"Full intensity — baseline lifts",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"Wed: Klow+CJC only. Fri: add MT-2 loading. Sun: first reta pin. Nausea from MT-2+reta may stack — pin both before bed.",bl:"BASELINE BLOODS: IGF-1, metabolic, glucose/insulin, HbA1c, lipids, CRP, testosterone"},
+{week:2,phase:"LAUNCH",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"0.5mg (10u)",w:"🟡 Sunday",dt:"Second pin. Tolerability check.",f:"1×/wk"},
+  {c:"mt2",d:"250mcg (5u)",w:"🌙 PM",dt:"LOAD continues → finishes mid-week. Then switch to 500mcg (10u) 2×/wk.",f:"daily→2×/wk"}
+],tr:"Progressive overload",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"MT-2 loading finishes ~day 10-12. Switch to maintenance 2×/wk (Mon+Thu). Tan building. Get brief UV sessions.",ord:"📦 Klow #2 + BAC water — runs out ~day 20"},
+{week:3,phase:"ESCALATION I",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1mg (20u)",w:"🟡 Sunday",dt:"First escalation. Warmer, more satiety.",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"Maintenance 2×/wk Mon+Thu",f:"2×/wk"}
+],tr:"Maintain intensity. Monitor appetite.",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"Reta metabolic effect starting. Tan should be visible. If appetite too suppressed, front-load protein."},
+{week:4,phase:"ESCALATION I",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1mg (20u)",w:"🟡 Sunday",dt:"Hold dose. Assess tolerability.",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}
+],tr:"Progressive overload. Tan deepening.",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"Base tan established. Skin improving from Klow + niacinamide."},
+{week:5,phase:"ESCALATION II",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Final escalation → cruise dose.",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}
+],tr:"Push intensity — recomp accelerating",mac:{cal:"2,800–2,900",p:200,f:75,c:"320–340"},n:"Mirror changes starting. Leaner midsection + lower back.",ord:"📦 Klow #3"},
+{week:6,phase:"ESCALATION II",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Cruise dose — hold here.",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}
+],tr:"Track all lifts",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"Slight calorie reduction. Visual changes accelerating.",bl:"MID-CYCLE BLOODS: IGF-1, liver, glucose, CRP",ord:"📦 CJC/Ipa #2 + BAC"},
+{week:7,phase:"DECISION",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Cruise",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}
+],tr:"Maintain or increase",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"People starting to notice. Tan + leanness compounding.",ord:"📦 Reta #2 + BAC"},
+{week:8,phase:"DECISION",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Cruise",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"2×/wk",f:"2×/wk"}
+],tr:"Assess strength",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"⚡ IGF-1 LR3 DECISION: Review bloods + mirror. If adding: 20-40mcg/day post-workout, 4 weeks.",bl:"Review wk6 bloods.",ord:"📦 Klow #4"},
+{week:9,phase:"CRUISE",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Cruise",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"Can reduce to 1×/wk",f:"1-2×/wk"}
+],tr:"V-taper focus",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"Payoff window. 6 weeks at full dose."},
+{week:10,phase:"CRUISE",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Cruise",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"1-2×/wk",f:"1-2×/wk"}
+],tr:"Shoulders, lats, chest",mac:{cal:"2,700–2,800",p:200,f:70,c:"300–320"},n:"Veins + definition. The look is coming together."},
+{week:11,phase:"CRUISE",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Cruise",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"1×/wk",f:"1×/wk"}
+],tr:"Maintain strength",mac:{cal:"2,600–2,700",p:200,f:70,c:"280–300"},n:"Calorie cut if plateaued. Protein stays 200g.",ord:"📦 Klow #5 + BAC (final)"},
+{week:12,phase:"CRUISE",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Cruise",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"1×/wk",f:"1×/wk"}
+],tr:"Maintain intensity",mac:{cal:"2,600–2,700",p:200,f:70,c:"280–300"},n:"Visibly different human. Lean, tanned, full."},
+{week:13,phase:"CRUISE",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Same",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Same",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Cruise",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"1×/wk",f:"1×/wk"}
+],tr:"Final push",mac:{cal:"2,600–2,700",p:200,f:70,c:"280–300"},n:"Compare to week 1 photos. Plan post-protocol."},
+{week:14,phase:"CRUISE",pins:[
+  {c:"klow",d:"10u",w:"☀️ AM",dt:"Final week",f:"daily"},
+  {c:"cjc",d:"6u",w:"🌙 PM",dt:"Final week",f:"daily"},
+  {c:"reta",d:"1.5mg (30u)",w:"🟡 Sunday",dt:"Final dose",f:"1×/wk"},
+  {c:"mt2",d:"500mcg (10u)",w:"🌙 PM",dt:"Final",f:"1×/wk"}
+],tr:"Deload if needed",mac:{cal:"2,600–2,700",p:200,f:70,c:"280–300"},n:"TARGET: 81-83kg, 9-11% BF. Tanned, lean, full.",bl:"END BLOODS: Full panel. Compare to baseline."}
 ],
-shopping:[{i:"Klow 80mg",q:"5 total",n:"~20d each"},{i:"CJC/Ipa 10mg",q:"2 total",n:"~50d each"},{i:"Reta 10mg",q:"2 total",n:"~15mg needed"},{i:"MT-2 10mg",q:"1 total",n:"Full protocol"},{i:"BAC Water 30ml",q:"3 total",n:"9ml per round"},{i:"Syringes 29g",q:"100+",n:"~2-3/day"},{i:"Alcohol Swabs",q:"100+",n:"Match syringes"}]};
+shopping:[{i:"Klow 80mg",q:"5 total",n:"~20d each"},{i:"CJC/Ipa 10mg",q:"2 total",n:"~50d each"},{i:"Reta 10mg",q:"2 total",n:"~15mg needed"},{i:"MT-2 10mg",q:"1 total",n:"Full protocol"},{i:"BAC Water 30ml",q:"3 total",n:"9ml per round"},{i:"0.5ml Syringes 29g",q:"100+",n:"Daily pins"},{i:"3ml Syringes+21g needles",q:"100",n:"Reconstitution"},{i:"Alcohol Swabs",q:"100+",n:"Match syringes"},{i:"Sharps Bin 2.5L",q:"1",n:"Full protocol"}]};
 
 const CC={klow:"#4A9EAF",cjc:"#7B8CDE",reta:"#D4A853",mt2:"#C084FC",igf:"#8B3A3A"};
 const SYMS=["Nausea","Low appetite","Flushing","Inj. pain","Poor sleep","Fatigue","Bloating","Headache"];
@@ -72,7 +148,7 @@ function load(){try{const d=JSON.parse(localStorage.getItem("pp-v8")||"{}");Obje
 function sv(){localStorage.setItem("pp-v8",JSON.stringify(S))}
 function gS(){return S.supps||DS}
 function gT(){return S.types||DT}
-function gWL(wk){return S.wlog[wk]||[]}
+function gWL(w){return S.wlog[w]||[]}
 function gP(w){return P.phases.find(p=>p.weeks.includes(w))}
 function gW(w){return P.weeks.find(x=>x.week===w)}
 function gC(k){return P.compounds.find(c=>c.key===k)}
@@ -87,35 +163,17 @@ function setR(k,v){S.recon[k]=v;sv();render()}
 function togSc(w,d,id){const k=`${w}-${d}-${id}`;S.sc[k]=!S.sc[k];sv();render()}
 function addSp(){const n=prompt("Name?");if(!n)return;const d=prompt("Dose?")||"";const t=prompt("am or pm?")||"am";const s=gS();s.push({id:"s"+Date.now(),name:n,dose:d,time:t.toLowerCase()});S.supps=s;sv();render()}
 function rmSp(id){S.supps=gS().filter(s=>s.id!==id);sv();render()}
-function addType(){const n=prompt("Workout name? (e.g. PUSH, YOGA, SWIM)");if(!n)return;const e=prompt("Exercises? (optional)")||"";const t=gT();t.push({id:"t"+Date.now(),name:n.toUpperCase(),ex:e});S.types=t;sv();render()}
-function rmType(id){S.types=gT().filter(t=>t.id!==id);sv();render()}
-function editType(id){const t=gT(),tr=t.find(x=>x.id===id);if(!tr)return;const n=prompt("Name:",tr.name);if(n)tr.name=n.toUpperCase();const e=prompt("Exercises:",tr.ex);if(e!==null)tr.ex=e;S.types=t;sv();render()}
-// Workout log: entry-based
-function addWL(wk,typeName){
-  if(!S.wlog[wk])S.wlog[wk]=[];
-  const note=prompt(`${typeName} — add a note? (optional, e.g. "5k 24:30", "heavy back")`)||"";
-  const now=new Date();
-  S.wlog[wk].push({id:"w"+Date.now(),type:typeName,note:note,ts:now.toISOString()});
-  sv();render();
-}
-function addCustomWL(wk){
-  const name=prompt("What did you do? (e.g. Swimming, Hiking, Boxing)");
-  if(!name)return;
-  const note=prompt("Note? (optional)")||"";
-  if(!S.wlog[wk])S.wlog[wk]=[];
-  S.wlog[wk].push({id:"w"+Date.now(),type:name.toUpperCase(),note:note,ts:new Date().toISOString()});
-  sv();render();
-}
-function editWLNote(wk,id){
-  const entries=S.wlog[wk]||[];const e=entries.find(x=>x.id===id);if(!e)return;
-  const n=prompt("Edit note:",e.note);if(n!==null)e.note=n;sv();render();
-}
-function rmWL(wk,id){S.wlog[wk]=(S.wlog[wk]||[]).filter(e=>e.id!==id);sv();render()}
+function addWL(w,tn){if(!S.wlog[w])S.wlog[w]=[];const n=prompt(`${tn} — note? (e.g. "5k 24:30", "heavy back")`)||"";S.wlog[w].push({id:"w"+Date.now(),type:tn,note:n,ts:new Date().toISOString()});sv();render()}
+function addCWL(w){const nm=prompt("What? (e.g. Swimming, Boxing)");if(!nm)return;const n=prompt("Note?")||"";if(!S.wlog[w])S.wlog[w]=[];S.wlog[w].push({id:"w"+Date.now(),type:nm.toUpperCase(),note:n,ts:new Date().toISOString()});sv();render()}
+function eWL(w,id){const e=(S.wlog[w]||[]).find(x=>x.id===id);if(!e)return;const n=prompt("Note:",e.note);if(n!==null)e.note=n;sv();render()}
+function rWL(w,id){S.wlog[w]=(S.wlog[w]||[]).filter(e=>e.id!==id);sv();render()}
+function addTy(){const n=prompt("Name? (e.g. YOGA, SWIM)");if(!n)return;const e=prompt("Exercises?")||"";const t=gT();t.push({id:"t"+Date.now(),name:n.toUpperCase(),ex:e});S.types=t;sv();render()}
+function rmTy(id){S.types=gT().filter(t=>t.id!==id);sv();render()}
+function edTy(id){const t=gT(),tr=t.find(x=>x.id===id);if(!tr)return;const n=prompt("Name:",tr.name);if(n)tr.name=n.toUpperCase();const e=prompt("Exercises:",tr.ex);if(e!==null)tr.ex=e;S.types=t;sv();render()}
 function dL(k){const c=gC(k);if(!c||!S.recon[k])return null;return c.sd-Math.floor((new Date()-new Date(S.recon[k]+"T00:00:00"))/864e5)}
 
 function uH(){const ph=gP(S.wk),ws=wS(S.wk);document.getElementById("phN").style.color=ph.color;document.getElementById("phN").textContent=ph.name;document.getElementById("phT").textContent=ph.tag;document.getElementById("phW").textContent=ws?`Wk ${S.wk}/14 · ${fm(ws)}`:`Wk ${S.wk}/14`;document.getElementById("tabs").innerHTML=TABS.map(t=>`<button class="tab${S.tab===t?" a":""}" style="${S.tab===t?`border-bottom-color:${ph.color}`:""}" onclick="S.tab='${t}';sv();render()">${t}</button>`).join("")}
 
-// ===== PROTOCOL =====
 function rP(){const ph=gP(S.wk),wd=gW(S.wk);let h="";
   if(!S.sd){h+=`<div class="cd" style="border-color:#D4A85330;background:#D4A85308;margin-top:16px"><div class="lbl" style="color:#D4A853;margin-bottom:8px">SET START DATE</div><input type="date" id="sdp" value="2026-04-02" style="background:#111218;border:1px solid #18191E;border-radius:6px;padding:8px 12px;color:#E0DED8;font-size:12px;width:100%;margin-bottom:8px"><button onclick="setSd(document.getElementById('sdp').value)" style="background:${ph.color};border:none;border-radius:6px;padding:8px;color:#fff;font-size:10px;font-weight:600;width:100%">START</button></div>`}
   else{h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 6px"><div class="lbl">WEEKS</div><button onclick="if(confirm('Change date?')){S.sd=null;sv();render()}" style="background:none;border:none;font-size:8px;color:#333;text-decoration:underline;font-family:inherit">edit</button></div>`}
@@ -123,39 +181,31 @@ function rP(){const ph=gP(S.wk),wd=gW(S.wk);let h="";
   P.weeks.forEach(w=>{const p=gP(w.week),pv=pc(w.week),a=w.week===S.wk,ws=wS(w.week);h+=`<button onclick="S.wk=${w.week};sv();render()" style="width:${S.sd?44:34}px;height:${S.sd?50:42}px;background:${a?"#111218":"transparent"};border:${a?`1px solid ${p.color}30`:"1px solid #141518"};border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;position:relative">${S.sd?`<span style="font-size:9px;font-weight:${a?700:400};color:${a?p.color:"#555"}">${fm(ws)}</span><span style="font-size:7px;color:#333">WK${w.week}</span>`:`<span style="font-size:11px;font-weight:${a?800:400};color:${a?p.color:"#555"}">${w.week}</span>`}${pv>0?`<div style="width:14px;height:2px;background:#141518;border-radius:1px;overflow:hidden"><div style="width:${pv}%;height:100%;background:${pv===100?"#4ADE80":p.color}"></div></div>`:""}${w.bl?'<div style="position:absolute;top:2px;right:2px;width:4px;height:4px;border-radius:50%;background:#EF4444"></div>':""}${w.ord?'<div style="position:absolute;top:2px;left:2px;width:4px;height:4px;border-radius:50%;background:#FBBF24"></div>':""}</button>`});
   h+=`</div>`;if(!wd)return h;
   if(wd.ord)h+=`<div class="cd" style="background:#FBBF2408;border-color:#FBBF2425"><div class="lbl" style="color:#FBBF24;margin-bottom:4px">REORDER</div><div style="font-size:10px;color:#FBBF24;line-height:1.5">${wd.ord}</div></div>`;
-  if(wd.n)h+=`<div class="cd" style="${wd.n.includes("DECISION")?"background:#D4A85308;border-color:#D4A85320":""};font-size:11px;color:#888;line-height:1.7">${wd.n}</div>`;
+  if(wd.n)h+=`<div class="cd" style="${wd.n.includes("DECISION")||wd.n.includes("⚡")?"background:#D4A85308;border-color:#D4A85320":""};font-size:11px;color:#888;line-height:1.7">${wd.n}</div>`;
   if(wd.bl)h+=`<div class="cd" style="background:#EF444408;border-color:#EF444418"><div class="lbl" style="color:#EF4444;margin-bottom:4px">🩸 BLOODWORK</div><div style="font-size:10px;color:#F87171;line-height:1.5">${wd.bl}</div></div>`;
   const ac=wd.pins.map(p=>p.c);h+=`<div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap">`;P.compounds.forEach(c=>{const on=ac.includes(c.key);if(c.key==="igf"&&!on)return;h+=`<div style="font-size:8px;letter-spacing:1px;padding:3px 8px;border-radius:4px;background:${on?c.color+"18":"#0D0E11"};color:${on?c.color:"#333"};border:1px solid ${on?c.color+"30":"#18191E"};font-weight:${on?600:400}">${on?"●":"○"} ${c.key.toUpperCase()}</div>`});h+=`</div>`;
-  wd.pins.forEach(pin=>{const cc=CC[pin.c],co=gC(pin.c),isW=pin.f!=="daily"&&pin.f!=="daily×10";let sl=[];if(isW){sl=pin.f==="2×/wk"?[{l:"Pin 1",i:0},{l:"Pin 2",i:1}]:[{l:"Pin",i:0}]}else{for(let i=0;i<7;i++){const dd=dD(S.wk,i);sl.push({l:dd?fm(dd):["M","T","W","T","F","S","S"][i],i})}}
+  wd.pins.forEach(pin=>{const cc=CC[pin.c],co=gC(pin.c),isW=pin.f!=="daily"&&pin.f!=="daily×10"&&pin.f!=="daily→2×/wk";let sl=[];if(isW){sl=pin.f==="2×/wk"?[{l:"Pin 1",i:0},{l:"Pin 2",i:1}]:[{l:"Pin",i:0}]}else{for(let i=0;i<7;i++){const dd=dD(S.wk,i);sl.push({l:dd?fm(dd):["M","T","W","T","F","S","S"][i],i})}}
     h+=`<div class="cd" style="border-left:3px solid ${cc}"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:11px;font-weight:700;color:${cc}">${co.name}</div><div style="font-size:9px;color:#444;margin-top:1px">${pin.w}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:700">${pin.d}</div><div style="font-size:9px;color:#555">${pin.f}</div></div></div><div style="font-size:9px;color:#555;margin-bottom:10px;line-height:1.5">${pin.dt}</div><div style="display:flex;gap:4px">${sl.map(s=>{const k=`${S.wk}-${pin.c}-${s.i}`,on=S.chk[k];return`<button onclick="tog('${k}')" style="flex:${isW?"0 0 auto":"1"};min-width:${isW?"50px":"0"};height:30px;background:${on?cc+"15":"#111218"};border:${on?`1px solid ${cc}40`:"1px solid #18191E"};border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:${S.sd?8:9}px;font-weight:600;color:${on?cc:"#333"}">${on?"✓":s.l}</button>`}).join("")}</div></div>`});
-  // Macros
   h+=`<div class="cd"><div class="lbl" style="margin-bottom:10px">MACROS</div><div style="display:flex;gap:8px">${[{l:"CALS",v:wd.mac.cal,c:"#E0DED8"},{l:"P",v:wd.mac.p+"g",c:"#4ADE80"},{l:"F",v:wd.mac.f+"g",c:"#FBBF24"},{l:"C",v:wd.mac.c+"g",c:"#60A5FA"}].map(m=>`<div style="flex:1;text-align:center"><div style="font-size:13px;font-weight:800;color:${m.c}">${m.v}</div><div style="font-size:7px;letter-spacing:1.5px;color:#333;margin-top:2px">${m.l}</div></div>`).join("")}</div></div>`;
-  // Quick workout log
   const wl=gWL(S.wk),types=gT();
-  h+=`<div class="cd"><div class="lbl" style="margin-bottom:10px">WORKOUTS THIS WEEK (${wl.length})</div>`;
-  h+=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${wl.length?10:0}px">${types.map(t=>`<button class="qa" onclick="addWL(${S.wk},'${t.name}')">${t.name}</button>`).join("")}<button class="qa" style="color:#4ADE80" onclick="addCustomWL(${S.wk})">+ OTHER</button></div>`;
-  if(wl.length){wl.forEach(e=>{const d=new Date(e.ts);h+=`<div class="wle"><div style="flex:1"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:10px;font-weight:700;color:#4ADE80">${e.type}</span><span style="font-size:8px;color:#333">${fm(d)}</span></div>${e.note?`<div style="font-size:9px;color:#666;margin-top:2px">${e.note}</div>`:""}</div><div style="display:flex;gap:4px"><button onclick="editWLNote(${S.wk},'${e.id}')" style="background:none;border:none;font-size:9px;color:#444">✏️</button><button onclick="rmWL(${S.wk},'${e.id}')" style="background:none;border:none;font-size:10px;color:#333">×</button></div></div>`})}
+  h+=`<div class="cd"><div class="lbl" style="margin-bottom:10px">WORKOUTS (${wl.length})</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${wl.length?10:0}px">${types.map(t=>`<button class="qa" onclick="addWL(${S.wk},'${t.name}')">${t.name}</button>`).join("")}<button class="qa" style="color:#4ADE80" onclick="addCWL(${S.wk})">+ OTHER</button></div>`;
+  if(wl.length){wl.forEach(e=>{const d=new Date(e.ts);h+=`<div class="wle"><div style="flex:1"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:10px;font-weight:700;color:#4ADE80">${e.type}</span><span style="font-size:8px;color:#333">${fm(d)}</span></div>${e.note?`<div style="font-size:9px;color:#666;margin-top:2px">${e.note}</div>`:""}</div><div style="display:flex;gap:4px"><button onclick="eWL(${S.wk},'${e.id}')" style="background:none;border:none;font-size:9px;color:#444">✏️</button><button onclick="rWL(${S.wk},'${e.id}')" style="background:none;border:none;font-size:10px;color:#333">×</button></div></div>`})}
   h+=`</div>`;
-  // Side effects
   const sy=S.se[S.wk]||[];
   h+=`<div class="cd"><div class="lbl" style="margin-bottom:8px">SIDE EFFECTS</div><div style="display:flex;flex-wrap:wrap">${SYMS.map(s=>`<span class="sym${sy.includes(s)?" on":""}" onclick="togSy(${S.wk},'${s}')">${s}</span>`).join("")}</div></div>`;
-  // Weight + Notes
   h+=`<div style="display:flex;gap:8px;margin-bottom:16px"><div class="cd" style="flex:0 0 100px"><div class="lbl">WEIGHT</div><input type="number" step="0.1" placeholder="—" value="${S.wt[S.wk]||""}" oninput="S.wt[${S.wk}]=this.value;sv()" style="background:transparent;border:none;outline:none;font-size:18px;font-weight:800;color:#E0DED8;width:100%;margin-top:4px"><div style="font-size:8px;color:#333">kg</div></div><div class="cd" style="flex:1"><div class="lbl">NOTES</div><textarea rows="2" placeholder="Anything..." oninput="S.notes[${S.wk}]=this.value;sv()" style="background:transparent;border:none;outline:none;resize:none;font-size:10px;color:#777;width:100%;line-height:1.5;margin-top:4px">${S.notes[S.wk]||""}</textarea></div></div>`;
   return h;
 }
 
-// ===== SUPPS =====
-function rS(){const supps=gS(),am=supps.filter(s=>s.time==="am"),pm=supps.filter(s=>s.time==="pm");
+function rSp(){const supps=gS(),am=supps.filter(s=>s.time==="am"),pm=supps.filter(s=>s.time==="pm");
   let h=`<div style="margin-top:18px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="lbl">SUPPLEMENTS — WK ${S.wk}</div><button onclick="addSp()" style="background:#111218;border:1px solid #18191E;border-radius:5px;padding:4px 10px;font-size:9px;color:#4ADE80;font-weight:600">+ ADD</button></div>`;
   [["☀️ MORNING","#4A9EAF",am],["🌙 EVENING","#7B8CDE",pm]].forEach(([ti,co,li])=>{if(!li.length)return;
     h+=`<div class="cd"><div style="font-size:10px;font-weight:700;color:${co};margin-bottom:8px">${ti}</div>`;
     li.forEach(s=>{h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid #141518"><div style="flex:1"><div style="font-size:11px;color:#888">${s.name}</div>${s.dose?`<div style="font-size:9px;color:#444">${s.dose}</div>`:""}</div><div style="display:flex;gap:3px;align-items:center">${[0,1,2,3,4,5,6].map(i=>{const k=`${S.wk}-${i}-${s.id}`,on=S.sc[k];return`<button class="sc${on?" on":""}" onclick="togSc(${S.wk},${i},'${s.id}')">${on?"✓":""}</button>`}).join("")}<button onclick="rmSp('${s.id}')" style="background:none;border:none;color:#333;font-size:12px;margin-left:4px">×</button></div></div>`});
     h+=`</div>`});
-  if(!supps.length)h+=`<div class="cd" style="text-align:center;padding:20px;font-size:11px;color:#555">Tap + to add supplements.</div>`;
-  h+=`</div>`;return h;
-}
+  if(!supps.length)h+=`<div class="cd" style="text-align:center;padding:20px;font-size:11px;color:#555">Tap + to add.</div>`;
+  h+=`</div>`;return h}
 
-// ===== PROGRESS =====
 function rPr(){let h=`<div style="margin-top:18px"><div class="lbl" style="margin-bottom:14px">PROGRESS</div>`;
   const ent=[];for(let i=1;i<=14;i++)if(S.wt[i])ent.push({w:i,kg:parseFloat(S.wt[i])});
   if(!ent.length){h+=`<div class="cd" style="text-align:center;padding:30px;font-size:11px;color:#555">No entries yet.</div>`}
@@ -164,20 +214,18 @@ function rPr(){let h=`<div style="margin-top:18px"><div class="lbl" style="margi
     h+=`<div class="cd"><div class="lbl" style="margin-bottom:12px">TREND</div><div style="position:relative;height:100px;margin:0 30px 0 35px;border-bottom:1px solid #18191E;border-left:1px solid #18191E"><div style="position:absolute;top:-4px;left:-34px;font-size:8px;color:#444">${mx.toFixed(1)}</div><div style="position:absolute;bottom:-4px;left:-34px;font-size:8px;color:#444">${mn.toFixed(1)}</div>`;
     ent.forEach((e,i)=>{const x=(e.w-1)/13*100,y=(1-(e.kg-mn)/rng)*100,ph=gP(e.w);h+=`<div style="position:absolute;left:${x}%;top:${y}%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:${ph.color};z-index:2"></div>`;if(i>0){const p=ent[i-1];h+=`<svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><line x1="${(p.w-1)/13*100}%" y1="${(1-(p.kg-mn)/rng)*100}%" x2="${x}%" y2="${y}%" stroke="#333" stroke-width="1"/></svg>`}});
     h+=`</div></div>`;
-    h+=`<div class="lbl" style="margin-top:14px;margin-bottom:8px">WEEKLY LOG</div>`;
+    h+=`<div class="lbl" style="margin-top:14px;margin-bottom:8px">LOG</div>`;
     for(let i=14;i>=1;i--){const wl=gWL(i),sy=S.se[i]||[];if(!S.wt[i]&&!wl.length)continue;const ws=wS(i),ph=gP(i),prev=S.wt[i-1]?parseFloat(S.wt[i])-parseFloat(S.wt[i-1]):null;
     h+=`<div class="cd" style="padding:10px 14px"><div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:11px;font-weight:600;color:${ph.color}">Wk ${i}</span>${ws?`<span style="font-size:9px;color:#333;margin-left:6px">${fm(ws)}</span>`:""}</div>${S.wt[i]?`<div style="display:flex;align-items:center;gap:8px">${prev!==null?`<span style="font-size:9px;color:${prev<=0?"#4ADE80":"#FBBF24"}">${prev>0?"+":""}${prev.toFixed(1)}</span>`:""}<span style="font-size:13px;font-weight:800">${parseFloat(S.wt[i]).toFixed(1)}</span><span style="font-size:8px;color:#333">kg</span></div>`:""}</div>${wl.length?`<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:2px">${wl.map(e=>`<span style="font-size:7px;padding:2px 6px;background:#4ADE8010;color:#4ADE80;border-radius:3px">${e.type}${e.note?" · "+e.note:""}</span>`).join("")}</div>`:""}${sy.length?`<div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:2px">${sy.map(s=>`<span style="font-size:7px;padding:2px 6px;background:#FBBF2410;color:#FBBF24;border-radius:3px">${s}</span>`).join("")}</div>`:""}</div>`}
   }h+=`</div>`;return h}
 
-// ===== ROUTINE =====
 function rR(){return`<div style="margin-top:18px"><div class="lbl" style="margin-bottom:14px">DAILY ROUTINE</div>
 <div class="cd" style="border-left:3px solid #4A9EAF"><div style="font-size:10px;font-weight:700;color:#4A9EAF;margin-bottom:8px">☀️ MORNING</div><div style="font-size:10px;color:#888;line-height:1.8">1. Swab → 10u Klow → pin subQ<br>2. Niacinamide serum<br>3. Zinc + D3 + niacinamide with food</div></div>
 <div class="cd" style="border-left:3px solid #7B8CDE"><div style="font-size:10px;font-weight:700;color:#7B8CDE;margin-bottom:8px">🌙 BEFORE BED</div><div style="font-size:10px;color:#888;line-height:1.8">1. 6u CJC/Ipa → pin subQ<br>2. MT-2 days: 2nd syringe 5-10u<br>3. Magnesium glycinate</div></div>
 <div class="cd" style="border-left:3px solid #D4A853"><div style="font-size:10px;font-weight:700;color:#D4A853;margin-bottom:8px">🟡 SUNDAY</div><div style="font-size:10px;color:#888;line-height:1.8">Reta 10-30u per phase. Light meal before.</div></div>
-<div class="cd" style="border-left:3px solid #C084FC"><div style="font-size:10px;font-weight:700;color:#C084FC;margin-bottom:8px">MT-2</div><div style="font-size:10px;color:#888;line-height:1.8"><b style="color:#C084FC">Wk3-4:</b> 5u daily×10 · <b style="color:#C084FC">Wk4-10:</b> 10u 2×/wk · <b style="color:#C084FC">Wk11+:</b> 10u 1×/wk</div><div style="font-size:9px;color:#EF4444;margin-top:8px;border-top:1px solid #18191E;padding-top:8px">⚠️ Mole map BEFORE+AFTER. UV after pin.</div></div>
+<div class="cd" style="border-left:3px solid #C084FC"><div style="font-size:10px;font-weight:700;color:#C084FC;margin-bottom:8px">MT-2</div><div style="font-size:10px;color:#888;line-height:1.8"><b style="color:#C084FC">Wk1-2:</b> 5u daily×10 (load)<br><b style="color:#C084FC">Wk2-8:</b> 10u 2×/wk<br><b style="color:#C084FC">Wk9+:</b> 10u 1×/wk</div><div style="font-size:9px;color:#EF4444;margin-top:8px;border-top:1px solid #18191E;padding-top:8px">⚠️ Mole map BEFORE+AFTER. UV after pin.</div></div>
 <div style="display:flex;gap:12px;background:#111218;border-radius:10px;padding:16px;margin-bottom:16px"><div style="flex:1;text-align:center"><div style="font-size:26px;font-weight:800;color:#4ADE80">2</div><div style="font-size:7px;color:#555;letter-spacing:1.5px">MOST DAYS</div></div><div style="flex:1;text-align:center"><div style="font-size:26px;font-weight:800;color:#FBBF24">3</div><div style="font-size:7px;color:#555;letter-spacing:1.5px">MT-2 DAYS</div></div><div style="flex:1;text-align:center"><div style="font-size:26px;font-weight:800;color:#D4A853">+1</div><div style="font-size:7px;color:#555;letter-spacing:1.5px">SUNDAYS</div></div></div></div>`}
 
-// ===== COMPOUNDS =====
 function rC(){let h=`<div style="margin-top:18px"><div class="lbl" style="margin-bottom:10px">VIAL STATUS</div>`;
   P.compounds.filter(c=>c.key!=="igf").forEach(c=>{const dl=dL(c.key),has=!!S.recon[c.key],col=dl===null?"#555":dl>7?"#4ADE80":dl>3?"#FBBF24":"#EF4444";
     h+=`<div class="cd" style="border-left:3px solid ${c.color};padding:10px 14px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:10px;font-weight:600;color:${c.color}">${c.key.toUpperCase()}</div><div style="font-size:9px;color:#444">${c.sd}d shelf</div></div>${has?`<div style="font-size:14px;font-weight:800;color:${col}">${dl}d</div>`:`<div style="font-size:9px;color:#555">—</div>`}</div><div style="margin-top:8px;display:flex;gap:6px;align-items:center"><span style="font-size:9px;color:#444">Recon:</span><input type="date" value="${S.recon[c.key]||""}" onchange="setR('${c.key}',this.value)" style="background:#111218;border:1px solid #18191E;border-radius:4px;padding:4px 8px;color:#888;font-size:10px;flex:1"></div></div>`});
@@ -187,31 +235,24 @@ function rC(){let h=`<div style="margin-top:18px"><div class="lbl" style="margin
   P.compounds.forEach(c=>{h+=`<div class="cd" style="border-left:3px solid ${c.color};opacity:${c.key==="igf"?0.4:1}"><div style="font-size:12px;font-weight:700;color:${c.color}">${c.name}</div><div style="font-size:9px;color:#555;margin:1px 0 10px">${c.sub}</div>${[["BAC",c.bac],["Conc",c.conc],["Draw",c.draw],["=",c.dd],["Store",c.store],["Vials",c.vials],["When",c.timing],["Cycle",c.cycle]].map(r=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #141518"><span style="font-size:9px;color:#444">${r[0]}</span><span style="font-size:10px;color:${r[0]==="Cycle"?c.color:"#888"};font-weight:500;text-align:right;max-width:65%">${r[1]}</span></div>`).join("")}</div>`});
   h+=`<div class="ib" style="margin-bottom:20px"><strong>Recon:</strong> BAC water only. Down vial wall. Swirl — never shake. Fridge.</div></div>`;return h}
 
-// ===== TRAINING =====
 function rT(){const ph=gP(S.wk),tr=gT(),wl=gWL(S.wk);
-  let h=`<div style="margin-top:18px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="lbl">TRAINING</div><button onclick="addType()" style="background:#111218;border:1px solid #18191E;border-radius:5px;padding:4px 10px;font-size:9px;color:#4ADE80;font-weight:600">+ ADD TYPE</button></div>`;
-  // Quick add for this week
-  h+=`<div class="cd" style="background:#111218"><div class="lbl" style="margin-bottom:10px">LOG WORKOUT — WK ${S.wk}</div><div style="display:flex;gap:6px;flex-wrap:wrap">${tr.map(t=>`<button class="qa" onclick="addWL(${S.wk},'${t.name}')">${t.name}</button>`).join("")}<button class="qa" style="color:#4ADE80" onclick="addCustomWL(${S.wk})">+ OTHER</button></div></div>`;
-  // This week's entries
-  if(wl.length){h+=`<div class="lbl" style="margin-bottom:8px">THIS WEEK (${wl.length} sessions)</div>`;
-    wl.forEach(e=>{const d=new Date(e.ts);h+=`<div class="wle"><div style="flex:1"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:10px;font-weight:700;color:#4ADE80">${e.type}</span><span style="font-size:8px;color:#333">${fm(d)}</span></div>${e.note?`<div style="font-size:9px;color:#666;margin-top:2px">${e.note}</div>`:""}</div><div style="display:flex;gap:4px"><button onclick="editWLNote(${S.wk},'${e.id}')" style="background:none;border:none;font-size:9px;color:#444">✏️</button><button onclick="rmWL(${S.wk},'${e.id}')" style="background:none;border:none;font-size:10px;color:#333">×</button></div></div>`})}
-  // Workout type reference
-  h+=`<div class="lbl" style="margin-top:18px;margin-bottom:10px">YOUR WORKOUT TYPES</div>`;
-  tr.forEach(t=>{h+=`<div class="cd"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${t.ex?5:0}px"><span style="font-size:12px;font-weight:800">${t.name}</span><div style="display:flex;gap:6px"><button onclick="editType('${t.id}')" style="background:none;border:none;font-size:9px;color:#444">✏️</button><button onclick="if(confirm('Remove ${t.name}?'))rmType('${t.id}')" style="background:none;border:none;font-size:10px;color:#333">×</button></div></div>${t.ex?`<div style="font-size:10px;color:#666;line-height:1.6">${t.ex}</div>`:""}</div>`});
-  // History
-  let hasHist=false;for(let i=14;i>=1;i--){if(gWL(i).length&&i!==S.wk)hasHist=true}
-  if(hasHist){h+=`<div class="lbl" style="margin-top:18px;margin-bottom:8px">HISTORY</div>`;
-    for(let i=14;i>=1;i--){if(i===S.wk)continue;const wl2=gWL(i);if(!wl2.length)continue;const ws=wS(i),ph2=gP(i);
-      h+=`<div class="cd" style="padding:10px 14px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10px;font-weight:600;color:${ph2.color}">Wk ${i}${ws?" · "+fm(ws):""}</span><span style="font-size:10px;color:#4ADE80">${wl2.length} sessions</span></div><div style="margin-top:6px">${wl2.map(e=>`<div style="font-size:9px;color:#888;padding:2px 0"><span style="color:#4ADE80;font-weight:600">${e.type}</span>${e.note?" — "+e.note:""}</div>`).join("")}</div></div>`}}
-  h+=`<div class="ib" style="margin-bottom:20px"><strong>Rule:</strong> Progressive overload. Hold if regression after wk 8-9.</div></div>`;return h}
+  let h=`<div style="margin-top:18px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="lbl">TRAINING</div><button onclick="addTy()" style="background:#111218;border:1px solid #18191E;border-radius:5px;padding:4px 10px;font-size:9px;color:#4ADE80;font-weight:600">+ TYPE</button></div>`;
+  h+=`<div class="cd" style="background:#111218"><div class="lbl" style="margin-bottom:10px">LOG — WK ${S.wk}</div><div style="display:flex;gap:6px;flex-wrap:wrap">${tr.map(t=>`<button class="qa" onclick="addWL(${S.wk},'${t.name}')">${t.name}</button>`).join("")}<button class="qa" style="color:#4ADE80" onclick="addCWL(${S.wk})">+ OTHER</button></div></div>`;
+  if(wl.length){h+=`<div class="lbl" style="margin-bottom:8px">THIS WEEK (${wl.length})</div>`;wl.forEach(e=>{const d=new Date(e.ts);h+=`<div class="wle"><div style="flex:1"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:10px;font-weight:700;color:#4ADE80">${e.type}</span><span style="font-size:8px;color:#333">${fm(d)}</span></div>${e.note?`<div style="font-size:9px;color:#666;margin-top:2px">${e.note}</div>`:""}</div><div style="display:flex;gap:4px"><button onclick="eWL(${S.wk},'${e.id}')" style="background:none;border:none;font-size:9px;color:#444">✏️</button><button onclick="rWL(${S.wk},'${e.id}')" style="background:none;border:none;font-size:10px;color:#333">×</button></div></div>`})}
+  h+=`<div class="lbl" style="margin-top:18px;margin-bottom:10px">WORKOUT TYPES</div>`;
+  tr.forEach(t=>{h+=`<div class="cd"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${t.ex?5:0}px"><span style="font-size:12px;font-weight:800">${t.name}</span><div style="display:flex;gap:6px"><button onclick="edTy('${t.id}')" style="background:none;border:none;font-size:9px;color:#444">✏️</button><button onclick="if(confirm('Remove?'))rmTy('${t.id}')" style="background:none;border:none;font-size:10px;color:#333">×</button></div></div>${t.ex?`<div style="font-size:10px;color:#666;line-height:1.6">${t.ex}</div>`:""}</div>`});
+  let hh=false;for(let i=14;i>=1;i--)if(gWL(i).length&&i!==S.wk)hh=true;
+  if(hh){h+=`<div class="lbl" style="margin-top:18px;margin-bottom:8px">HISTORY</div>`;
+    for(let i=14;i>=1;i--){if(i===S.wk)continue;const w2=gWL(i);if(!w2.length)continue;const ws=wS(i),ph2=gP(i);
+      h+=`<div class="cd" style="padding:10px 14px"><div style="display:flex;justify-content:space-between"><span style="font-size:10px;font-weight:600;color:${ph2.color}">Wk ${i}${ws?" · "+fm(ws):""}</span><span style="font-size:10px;color:#4ADE80">${w2.length}</span></div><div style="margin-top:6px">${w2.map(e=>`<div style="font-size:9px;color:#888;padding:2px 0"><span style="color:#4ADE80;font-weight:600">${e.type}</span>${e.note?" — "+e.note:""}</div>`).join("")}</div></div>`}}
+  h+=`</div>`;return h}
 
-// ===== SHOPPING =====
 function rSh(){const cols=[CC.klow,CC.cjc,CC.reta,CC.mt2];let h=`<div style="margin-top:18px"><div class="lbl" style="margin-bottom:14px">SUPPLY</div>`;P.shopping.forEach((s,i)=>{h+=`<div class="cd" style="padding:12px 16px;${i<4?`border-left:3px solid ${cols[i]}`:""}"><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:${i<7?"#E0DED8":"#888"}">${s.i}</span><span style="font-size:12px;font-weight:800;color:${i<4?"#D4A853":"#555"}">${s.q}</span></div><div style="font-size:9px;color:#555;margin-top:3px">${s.n}</div></div>`});
   h+=`<div class="lbl" style="margin-top:18px;margin-bottom:10px">REORDER</div>`;
   [{w:2,t:"Klow #2+BAC",c:"#4A9EAF"},{w:5,t:"Klow #3",c:"#4A9EAF"},{w:6,t:"CJC/Ipa #2+BAC",c:"#7B8CDE"},{w:7,t:"Reta #2+BAC",c:"#D4A853"},{w:8,t:"Klow #4",c:"#4A9EAF"},{w:11,t:"Klow #5+BAC",c:"#4A9EAF"}].forEach(o=>{const ws=wS(o.w);h+=`<div class="cd" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-left:3px solid ${o.c}"><div><span style="font-size:10px;font-weight:600;color:${o.c}">Wk${o.w}</span>${ws?`<span style="font-size:9px;color:#333;margin-left:6px">${fm(ws)}</span>`:""}</div><span style="font-size:10px;color:#888">${o.t}</span></div>`});
   h+=`<div class="ib" style="margin-bottom:20px"><strong>IGF-1 LR3</strong> — week 8 decision.</div></div>`;return h}
 
-function render(){uH();const m={protocol:rP,routine:rR,supps:rS,progress:rPr,compounds:rC,training:rT,shopping:rSh};document.getElementById("cnt").innerHTML=(m[S.tab]||rP)()}
+function render(){uH();const m={protocol:rP,routine:rR,supps:rSp,progress:rPr,compounds:rC,training:rT,shopping:rSh};document.getElementById("cnt").innerHTML=(m[S.tab]||rP)()}
 load();render();
 </script>
 </body>
